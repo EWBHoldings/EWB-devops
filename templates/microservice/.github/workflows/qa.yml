@@ -1,0 +1,41 @@
+name: Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+# Security scan and release require elevated permissions.
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+
+jobs:
+  pipeline:
+    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    with:
+      stack: 'dotnet'
+      dotnet-version: '8.0.x'
+
+      # ── Feature Flags ────────────────────────────────────────────────────
+      enable-security-scan: true    # CodeQL on every PR
+      enable-sonarqube:     false   # enable when SonarQube is configured
+      enable-docker-build:  true    # build image on every PR (no push)
+      enable-docker-push:   false   # set true on merge to main — add secrets
+      enable-release:       false   # enable on tag-based release workflow
+
+      # ── SonarQube (uncomment when enable-sonarqube: true) ────────────────
+      # sonar-project-key: 'my-microservice'
+
+      # ── Docker ───────────────────────────────────────────────────────────
+      docker-image-name: 'my-microservice'
+      dockerfile-path:   'Dockerfile'
+
+    # Uncomment when enable-sonarqube: true or enable-docker-push: true
+    # secrets:
+    #   SONAR_TOKEN:       ${{ secrets.SONAR_TOKEN }}
+    #   SONAR_HOST_URL:    ${{ secrets.SONAR_HOST_URL }}
+    #   REGISTRY_USERNAME: ${{ github.actor }}
+    #   REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}

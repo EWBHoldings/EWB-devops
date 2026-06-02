@@ -1,0 +1,32 @@
+name: Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+# Add 'security-events: write' and 'actions: read' when enabling security scan.
+# Add 'contents: write' when enabling release.
+permissions:
+  contents: read
+
+jobs:
+  pipeline:
+    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    with:
+      stack: 'react'
+      node-version: '20'
+
+      # ── Feature Flags ────────────────────────────────────────────────────
+      # Set to true to enable. Each flag is independent.
+      enable-security-scan: false
+      enable-sonarqube:     false
+      enable-docker-build:  false
+      enable-release:       false
+
+      # ── SonarQube (uncomment when enable-sonarqube: true) ────────────────
+      # sonar-project-key: 'my-react-app'
+
+      # ── Docker (uncomment when enable-docker-build: true) ────────────────
+      # docker-image-name: 'my-react-app'

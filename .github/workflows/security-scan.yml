@@ -1,0 +1,71 @@
+name: Security Scan Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      language:
+        description: 'CodeQL language(s) to scan — javascript, csharp, java, python (comma-separated for multiple)'
+        required: false
+        default: 'javascript'
+        type: string
+      working-directory:
+        description: 'Working directory of the project'
+        required: false
+        default: '.'
+        type: string
+      fail-on-severity:
+        description: 'Minimum vulnerability severity that fails the pipeline (low, moderate, high, critical)'
+        required: false
+        default: 'high'
+        type: string
+
+jobs:
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ inputs.language }}
+          # To add custom query packs, uncomment and configure:
+          # queries: security-extended,security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{ inputs.language }}'
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    # Dependency Review requires a pull_request event context from the caller.
+    # This job is skipped when triggered by push or other non-PR events.
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: ${{ inputs.fail-on-severity }}
+          # To allow specific licenses, uncomment and configure:
+          # allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause
+          # To deny specific licenses:
+          # deny-licenses: GPL-2.0, AGPL-3.0

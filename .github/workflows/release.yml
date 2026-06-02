@@ -1,0 +1,76 @@
+name: Release Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        description: 'Release tag (e.g. v1.2.0). Inferred from git ref if omitted and workflow was triggered by a tag push.'
+        required: false
+        default: ''
+        type: string
+      generate-notes:
+        description: 'Automatically generate release notes from merged pull requests and commits'
+        required: false
+        default: true
+        type: boolean
+      draft:
+        description: 'Publish as a draft release for review before making public'
+        required: false
+        default: false
+        type: boolean
+      prerelease:
+        description: 'Mark as a pre-release (e.g. for release candidates or beta builds)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tag name
+        id: resolve-tag
+        run: |
+          if [ -n "${{ inputs.tag-name }}" ]; then
+            echo "tag=${{ inputs.tag-name }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "ERROR: No tag name provided and this workflow was not triggered by a tag push."
+            echo "Either push a tag (e.g. git tag v1.0.0 && git push origin v1.0.0) or pass tag-name as an input."
+            exit 1
+          fi
+
+      - name: Validate semantic version format
+        run: |
+          TAG="${{ steps.resolve-tag.outputs.tag }}"
+          if ! echo "$TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$'; then
+            echo "WARNING: Tag '$TAG' does not follow semantic versioning (vMAJOR.MINOR.PATCH)."
+            echo "Proceeding, but consider using semver tags for consistent release naming."
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.resolve-tag.outputs.tag }}
+          generate_release_notes: ${{ inputs.generate-notes }}
+          draft: ${{ inputs.draft }}
+          prerelease: ${{ inputs.prerelease }}
+
+      - name: Release summary
+        run: |
+          echo "### Release Created" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| Tag | \`${{ steps.resolve-tag.outputs.tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Draft | \`${{ inputs.draft }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Pre-release | \`${{ inputs.prerelease }}\` |" >> $GITHUB_STEP_SUMMARY

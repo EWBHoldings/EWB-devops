@@ -1,0 +1,256 @@
+name: EWB Pipeline
+
+# Centralized orchestrator workflow.
+# Consumers call this single workflow and toggle features via boolean inputs.
+# Only one QA job runs — selected by the `stack` input.
+# All other jobs are feature-flagged and off by default.
+
+on:
+  workflow_call:
+
+    inputs:
+
+      # ── Stack Selection (required) ────────────────────────────────────────
+      stack:
+        description: 'Project technology stack: react | node | dotnet | java'
+        required: true
+        type: string
+
+      # ── Runtime Versions ──────────────────────────────────────────────────
+      node-version:
+        description: 'Node.js version — used when stack is react or node'
+        required: false
+        default: '20'
+        type: string
+      dotnet-version:
+        description: '.NET SDK version — used when stack is dotnet'
+        required: false
+        default: '8.0.x'
+        type: string
+      java-version:
+        description: 'Java version — used when stack is java'
+        required: false
+        default: '21'
+        type: string
+      java-distribution:
+        description: 'JDK distribution — used when stack is java'
+        required: false
+        default: 'temurin'
+        type: string
+
+      # ── Project Configuration ─────────────────────────────────────────────
+      working-directory:
+        description: 'Project root directory (useful for monorepos)'
+        required: false
+        default: '.'
+        type: string
+      solution-file:
+        description: 'Path to a .sln or .csproj file — dotnet stack only, optional'
+        required: false
+        default: ''
+        type: string
+
+      # ── Feature Flags ─────────────────────────────────────────────────────
+      enable-security-scan:
+        description: 'Enable CodeQL security scanning'
+        required: false
+        default: false
+        type: boolean
+      enable-sonarqube:
+        description: 'Enable SonarQube analysis and Quality Gate check'
+        required: false
+        default: false
+        type: boolean
+      enable-docker-build:
+        description: 'Enable Docker image build'
+        required: false
+        default: false
+        type: boolean
+      enable-docker-push:
+        description: 'Push the Docker image to the registry after build — requires enable-docker-build: true and registry secrets'
+        required: false
+        default: false
+        type: boolean
+      enable-release:
+        description: 'Enable GitHub Release creation — requires a version tag trigger or release-tag input'
+        required: false
+        default: false
+        type: boolean
+
+      # ── SonarQube Configuration ───────────────────────────────────────────
+      sonar-project-key:
+        description: 'SonarQube project key — required when enable-sonarqube is true'
+        required: false
+        default: ''
+        type: string
+      sonar-project-name:
+        description: 'SonarQube project display name — defaults to sonar-project-key if omitted'
+        required: false
+        default: ''
+        type: string
+
+      # ── Docker Configuration ──────────────────────────────────────────────
+      docker-image-name:
+        description: 'Docker image name without registry prefix — required when enable-docker-build is true'
+        required: false
+        default: ''
+        type: string
+      docker-registry:
+        description: 'Container registry URL (e.g. ghcr.io, myacr.azurecr.io)'
+        required: false
+        default: 'ghcr.io'
+        type: string
+      docker-image-tag:
+        description: 'Tag to apply to the Docker image'
+        required: false
+        default: 'latest'
+        type: string
+      dockerfile-path:
+        description: 'Path to the Dockerfile'
+        required: false
+        default: 'Dockerfile'
+        type: string
+
+      # ── Release Configuration ─────────────────────────────────────────────
+      release-tag:
+        description: 'Release tag name — inferred from git ref when triggered by a tag push'
+        required: false
+        default: ''
+        type: string
+      release-draft:
+        description: 'Create the release as a draft'
+        required: false
+        default: false
+        type: boolean
+      release-prerelease:
+        description: 'Mark the release as a pre-release'
+        required: false
+        default: false
+        type: boolean
+
+    secrets:
+      SONAR_TOKEN:
+        description: 'SonarQube authentication token — required when enable-sonarqube is true'
+        required: false
+      SONAR_HOST_URL:
+        description: 'SonarQube server URL — required when enable-sonarqube is true'
+        required: false
+      REGISTRY_USERNAME:
+        description: 'Container registry username — required when enable-docker-push is true'
+        required: false
+      REGISTRY_PASSWORD:
+        description: 'Container registry password or token — required when enable-docker-push is true'
+        required: false
+
+# Declare all permissions that any enabled feature may need.
+# The caller must also grant these in their workflow for them to take effect.
+permissions:
+  security-events: write  # CodeQL
+  actions: read           # CodeQL
+  contents: write         # GitHub Release creation
+  pull-requests: write    # Dependency Review
+
+jobs:
+
+  # ── QA ────────────────────────────────────────────────────────────────────
+  # Exactly one QA job runs based on the stack input; the others are skipped.
+
+  react-qa:
+    name: React QA
+    if: inputs.stack == 'react'
+    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    with:
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+
+  node-qa:
+    name: Node.js QA
+    if: inputs.stack == 'node'
+    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    with:
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+
+  dotnet-qa:
+    name: .NET QA
+    if: inputs.stack == 'dotnet'
+    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    with:
+      dotnet-version: ${{ inputs.dotnet-version }}
+      working-directory: ${{ inputs.working-directory }}
+      solution-file: ${{ inputs.solution-file }}
+
+  java-qa:
+    name: Java QA
+    if: inputs.stack == 'java'
+    uses: your-org/EWB-devops/.github/workflows/java-qa.yml@main
+    with:
+      java-version: ${{ inputs.java-version }}
+      java-distribution: ${{ inputs.java-distribution }}
+      working-directory: ${{ inputs.working-directory }}
+
+  # ── Security Scan ─────────────────────────────────────────────────────────
+  # Runs in parallel with QA. Language is derived from the stack automatically.
+
+  security-scan:
+    name: Security Scan
+    if: inputs.enable-security-scan == true
+    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+      pull-requests: write
+    with:
+      # Map stack → CodeQL language automatically
+      language: ${{ inputs.stack == 'dotnet' && 'csharp' || inputs.stack == 'java' && 'java' || 'javascript' }}
+      working-directory: ${{ inputs.working-directory }}
+
+  # ── SonarQube ─────────────────────────────────────────────────────────────
+  # Runs after QA passes. Skipped if enable-sonarqube is false.
+
+  sonarqube:
+    name: SonarQube Analysis
+    if: inputs.enable-sonarqube == true
+    needs: [react-qa, node-qa, dotnet-qa, java-qa]
+    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    with:
+      project-key: ${{ inputs.sonar-project-key }}
+      project-name: ${{ inputs.sonar-project-name }}
+      working-directory: ${{ inputs.working-directory }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  # ── Docker Build ──────────────────────────────────────────────────────────
+  # Runs after QA passes. Skipped if enable-docker-build is false.
+
+  docker-build:
+    name: Docker Build
+    if: inputs.enable-docker-build == true
+    needs: [react-qa, node-qa, dotnet-qa, java-qa]
+    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    with:
+      image-name: ${{ inputs.docker-image-name }}
+      registry: ${{ inputs.docker-registry }}
+      image-tag: ${{ inputs.docker-image-tag }}
+      dockerfile-path: ${{ inputs.dockerfile-path }}
+      push-image: ${{ inputs.enable-docker-push }}
+    secrets:
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  # ── Release ───────────────────────────────────────────────────────────────
+  # Runs after QA passes. Skipped if enable-release is false.
+
+  release:
+    name: Create Release
+    if: inputs.enable-release == true
+    needs: [react-qa, node-qa, dotnet-qa, java-qa]
+    uses: your-org/EWB-devops/.github/workflows/release.yml@main
+    permissions:
+      contents: write
+    with:
+      tag-name: ${{ inputs.release-tag }}
+      draft: ${{ inputs.release-draft }}
+      prerelease: ${{ inputs.release-prerelease }}

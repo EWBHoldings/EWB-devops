@@ -1,0 +1,15 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/.idea
+**/*.user
+**/bin
+**/obj
+**/node_modules
+**/.env
+**/*.md
+**/docker-compose*
+**/Dockerfile*
+!Dockerfile
+.github

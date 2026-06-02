@@ -1,0 +1,32 @@
+name: Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+# Add 'security-events: write' and 'actions: read' when enabling security scan.
+# Add 'contents: write' when enabling release.
+permissions:
+  contents: read
+
+jobs:
+  pipeline:
+    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    with:
+      stack: 'dotnet'
+      dotnet-version: '8.0.x'
+      # solution-file: 'src/MyApp.sln'   # uncomment if targeting a specific solution
+
+      # ── Feature Flags ────────────────────────────────────────────────────
+      enable-security-scan: false
+      enable-sonarqube:     false
+      enable-docker-build:  false
+      enable-release:       false
+
+      # ── SonarQube (uncomment when enable-sonarqube: true) ────────────────
+      # sonar-project-key: 'my-dotnet-api'
+
+      # ── Docker (uncomment when enable-docker-build: true) ────────────────
+      # docker-image-name: 'my-dotnet-api'

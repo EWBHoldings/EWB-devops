@@ -1,0 +1,64 @@
+name: SonarQube Analysis Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      project-key:
+        description: 'SonarQube project key (must match the key configured in your SonarQube server)'
+        required: true
+        type: string
+      project-name:
+        description: 'SonarQube project display name (defaults to project-key if omitted)'
+        required: false
+        default: ''
+        type: string
+      working-directory:
+        description: 'Working directory of the project'
+        required: false
+        default: '.'
+        type: string
+      sonar-host-url:
+        description: 'SonarQube server URL — use this for non-SonarCloud instances'
+        required: false
+        default: ''
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: 'SonarQube authentication token — store in repository or organisation secrets'
+        required: true
+      SONAR_HOST_URL:
+        description: 'SonarQube server URL as a secret (takes precedence over sonar-host-url input)'
+        required: false
+
+jobs:
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Checkout source code
+        # Shallow clones are disabled for accurate blame information and branch analysis
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run SonarQube scan
+        uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || inputs.sonar-host-url }}
+        with:
+          projectBaseDir: ${{ inputs.working-directory }}
+          args: >
+            -Dsonar.projectKey=${{ inputs.project-key }}
+            -Dsonar.projectName=${{ inputs.project-name || inputs.project-key }}
+
+      - name: Check Quality Gate
+        uses: sonarsource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || inputs.sonar-host-url }}

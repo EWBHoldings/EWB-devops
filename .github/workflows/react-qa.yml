@@ -1,0 +1,58 @@
+name: React QA Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '20'
+        type: string
+      working-directory:
+        description: 'Working directory containing the React project'
+        required: false
+        default: '.'
+        type: string
+
+jobs:
+  react-qa:
+    name: React QA
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run ESLint
+        run: npm run lint --if-present
+
+      - name: Run unit tests
+        env:
+          CI: true
+        run: |
+          if node -e "const pkg = require('./package.json'); if (!pkg.scripts || !pkg.scripts.test) process.exit(1);" 2>/dev/null; then
+            npm test -- --watchAll=false --passWithNoTests
+          else
+            echo "No test script defined, skipping."
+          fi
+
+      - name: Build application
+        run: npm run build --if-present

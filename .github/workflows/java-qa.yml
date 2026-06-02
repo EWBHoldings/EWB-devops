@@ -1,0 +1,83 @@
+name: Java QA Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: 'Java version to use'
+        required: false
+        default: '21'
+        type: string
+      java-distribution:
+        description: 'JDK distribution (temurin, zulu, corretto, microsoft, oracle)'
+        required: false
+        default: 'temurin'
+        type: string
+      working-directory:
+        description: 'Working directory containing the Java project'
+        required: false
+        default: '.'
+        type: string
+
+jobs:
+  java-qa:
+    name: Java QA
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Java ${{ inputs.java-version }} (${{ inputs.java-distribution }})
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distribution }}
+
+      - name: Cache Maven dependencies
+        if: hashFiles('**/pom.xml') != ''
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Cache Gradle dependencies
+        if: hashFiles('**/build.gradle') != '' || hashFiles('**/build.gradle.kts') != ''
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Detect build tool and run tests
+        run: |
+          if [ -f "pom.xml" ]; then
+            echo "Maven project detected — running: mvn clean test"
+            mvn clean test --batch-mode --no-transfer-progress
+          elif [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
+            echo "Gradle project detected — running: ./gradlew test"
+            chmod +x ./gradlew
+            ./gradlew test
+          else
+            echo "ERROR: No supported build tool found. Expected pom.xml or build.gradle."
+            exit 1
+          fi
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-test-reports
+          path: |
+            **/target/surefire-reports/
+            **/build/reports/tests/
+          retention-days: 7
+          if-no-files-found: ignore
