@@ -23,11 +23,6 @@ jobs:
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -50,9 +45,6 @@ jobs:
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     # Dependency Review requires a pull_request event context from the caller.
     # This job is skipped when triggered by push or other non-PR events.
     if: github.event_name == 'pull_request'
