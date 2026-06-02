@@ -142,13 +142,10 @@ on:
         description: 'Container registry password or token — required when enable-docker-push is true'
         required: false
 
-# Declare all permissions that any enabled feature may need.
-# The caller must also grant these in their workflow for them to take effect.
-permissions:
-  security-events: write  # CodeQL
-  actions: read           # CodeQL
-  contents: write         # GitHub Release creation
-  pull-requests: write    # Dependency Review
+# No permissions declared here — the orchestrator inherits whatever the caller grants.
+# Add permissions to YOUR calling workflow based on the features you enable:
+#   enable-security-scan: true  →  security-events: write, actions: read
+#   enable-release: true        →  contents: write
 
 jobs:
 
@@ -196,11 +193,6 @@ jobs:
     name: Security Scan
     if: inputs.enable-security-scan == true
     uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-      pull-requests: write
     with:
       # Map stack → CodeQL language automatically
       language: ${{ inputs.stack == 'dotnet' && 'csharp' || inputs.stack == 'java' && 'java' || 'javascript' }}
@@ -248,8 +240,6 @@ jobs:
     if: inputs.enable-release == true
     needs: [react-qa, node-qa, dotnet-qa, java-qa]
     uses: EWBHoldings/EWB-devops/.github/workflows/release.yml@main
-    permissions:
-      contents: write
     with:
       tag-name: ${{ inputs.release-tag }}
       draft: ${{ inputs.release-draft }}
