@@ -50,6 +50,9 @@ on:
         description: 'Registry password or token — required when push-image is true'
         required: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   docker-build:
     name: Docker Build

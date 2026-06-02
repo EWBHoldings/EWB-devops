@@ -14,6 +14,9 @@ on:
         default: '.'
         type: string
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   node-qa:
     name: Node.js QA
@@ -42,7 +45,12 @@ jobs:
           fi
 
       - name: Run lint
-        run: npm run lint --if-present
+        run: |
+          if node -e "const pkg = require('./package.json'); if (!pkg.scripts || !pkg.scripts.lint) process.exit(1);" 2>/dev/null; then
+            npm run lint
+          else
+            echo "No lint script defined, skipping."
+          fi
 
       - name: Run unit tests
         run: |
@@ -53,4 +61,9 @@ jobs:
           fi
 
       - name: Validate build
-        run: npm run build --if-present
+        run: |
+          if node -e "const pkg = require('./package.json'); if (!pkg.scripts || !pkg.scripts.build) process.exit(1);" 2>/dev/null; then
+            npm run build
+          else
+            echo "No build script defined, skipping."
+          fi

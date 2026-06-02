@@ -30,6 +30,9 @@ on:
         description: 'SonarQube server URL as a secret (takes precedence over sonar-host-url input)'
         required: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   sonarqube:
     name: SonarQube Analysis
