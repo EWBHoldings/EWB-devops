@@ -67,7 +67,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       node-version: '20'
       working-directory: '.'
@@ -78,7 +78,7 @@ For a monorepo where the React app lives in a subdirectory:
 ```yaml
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       working-directory: 'frontend'
 ```

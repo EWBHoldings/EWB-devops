@@ -57,7 +57,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/java-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/java-qa.yml@main
     with:
       java-version: '21'
       java-distribution: 'temurin'

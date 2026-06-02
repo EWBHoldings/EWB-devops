@@ -42,7 +42,7 @@ GitHub Actions' `workflow_call` trigger allows a workflow file to be called from
 ```yaml
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
 ```
 
 Key properties:
@@ -74,7 +74,7 @@ Secrets are never inherited automatically. The calling workflow must explicitly 
 ```yaml
 jobs:
   sonarqube:
-    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/sonarqube.yml@main
     with:
       project-key: 'my-project'
     secrets:
@@ -87,7 +87,7 @@ Alternatively, use `secrets: inherit` to forward all secrets from the calling wo
 ```yaml
 jobs:
   sonarqube:
-    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/sonarqube.yml@main
     with:
       project-key: 'my-project'
     secrets: inherit
@@ -106,7 +106,7 @@ jobs:
       security-events: write
       actions: read
       contents: read
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
 ```
 
 ---

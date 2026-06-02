@@ -7,7 +7,7 @@ This template provides the recommended starting structure for a .NET 8 Web API w
 ## Using This Template
 
 1. Copy the contents of this directory into your new repository
-2. Replace `your-org` in `.github/workflows/qa.yml` with your GitHub organisation name
+2. Replace `EWBHoldings` in `.github/workflows/qa.yml` with your GitHub organisation name
 3. Rename `MyApp` throughout the project to your application name
 4. Update `README.md` with project-specific information
 5. Run `dotnet restore` and `dotnet build` locally to verify the setup

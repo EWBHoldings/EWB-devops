@@ -46,7 +46,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       node-version: '20'
 ```
@@ -64,7 +64,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       node-version: '20'
 ```
@@ -82,7 +82,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: '8.0.x'
 ```
@@ -100,7 +100,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/java-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/java-qa.yml@main
     with:
       java-version: '21'
 ```
@@ -120,10 +120,10 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
 
   security:
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
     with:
       language: 'csharp'
     permissions:
@@ -133,7 +133,7 @@ jobs:
 
   docker:
     needs: qa
-    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/docker-build.yml@main
     with:
       image-name: 'my-api'
       push-image: false
@@ -165,7 +165,7 @@ Secrets are never inherited automatically. Pass them explicitly:
 ```yaml
 jobs:
   sonarqube:
-    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/sonarqube.yml@main
     with:
       project-key: 'my-project'
     secrets:
@@ -184,12 +184,12 @@ All workflows accept a `working-directory` input. Use this for monorepos with mu
 ```yaml
 jobs:
   qa-frontend:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       working-directory: 'apps/frontend'
 
   qa-api:
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       working-directory: 'apps/api'
 ```

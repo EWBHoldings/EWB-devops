@@ -55,7 +55,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
 ```
 
 With optional inputs:
@@ -63,7 +63,7 @@ With optional inputs:
 ```yaml
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       node-version: '20'
       working-directory: '.'
@@ -84,7 +84,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       node-version: '20'
 ```
@@ -104,7 +104,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: '8.0.x'
 ```
@@ -114,7 +114,7 @@ For a specific solution file:
 ```yaml
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: '8.0.x'
       solution-file: 'src/MyApp.sln'
@@ -135,7 +135,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/java-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/java-qa.yml@main
     with:
       java-version: '21'
       java-distribution: 'temurin'
@@ -177,12 +177,12 @@ If your repository contains multiple applications in subdirectories, use the `wo
 ```yaml
 jobs:
   qa-frontend:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       working-directory: 'frontend'
 
   qa-api:
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       working-directory: 'api'
 ```

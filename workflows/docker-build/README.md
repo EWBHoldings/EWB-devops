@@ -65,7 +65,7 @@ on:
 
 jobs:
   docker:
-    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/docker-build.yml@main
     with:
       image-name: 'my-api'
       push-image: false
@@ -82,7 +82,7 @@ on:
 
 jobs:
   docker:
-    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/docker-build.yml@main
     with:
       image-name: 'my-api'
       registry: 'ghcr.io'
@@ -98,7 +98,7 @@ jobs:
 ```yaml
 jobs:
   docker:
-    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/docker-build.yml@main
     with:
       image-name: 'my-api'
       registry: 'myacr.azurecr.io'

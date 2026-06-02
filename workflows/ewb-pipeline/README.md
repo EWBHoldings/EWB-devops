@@ -1,4 +1,4 @@
-# ewb-pipeline — Centralized Pipeline Orchestrator
+﻿# ewb-pipeline — Centralized Pipeline Orchestrator
 
 **File:** `.github/workflows/ewb-pipeline.yml`
 
@@ -141,7 +141,7 @@ on:
 
 jobs:
   pipeline:
-    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/ewb-pipeline.yml@main
     with:
       stack: 'react'
 ```
@@ -166,7 +166,7 @@ permissions:
 
 jobs:
   pipeline:
-    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/ewb-pipeline.yml@main
     with:
       stack: 'dotnet'
       enable-security-scan: true
@@ -192,7 +192,7 @@ permissions:
 
 jobs:
   pipeline:
-    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/ewb-pipeline.yml@main
     with:
       stack: 'dotnet'
       enable-security-scan: true
@@ -225,7 +225,7 @@ permissions:
 
 jobs:
   pipeline:
-    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/ewb-pipeline.yml@main
     with:
       stack: 'dotnet'
       enable-security-scan: true

@@ -163,7 +163,7 @@ permissions:
 
 jobs:
   pipeline:
-    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/ewb-pipeline.yml@main
     with:
       stack: 'dotnet'            # react | node | dotnet | java
 
@@ -199,7 +199,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       node-version: '20'
 ```
@@ -219,7 +219,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       node-version: '20'
 ```
@@ -239,7 +239,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: '8.0.x'
 ```
@@ -259,7 +259,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/java-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/java-qa.yml@main
     with:
       java-version: '21'
       java-distribution: 'temurin'
@@ -272,7 +272,7 @@ jobs:
 ```yaml
 jobs:
   docker:
-    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/docker-build.yml@main
     with:
       image-name: 'my-api'
       push-image: false        # true on merge to main, with secrets
@@ -285,7 +285,7 @@ jobs:
 ```yaml
 jobs:
   security:
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
     with:
       language: 'javascript'   # or: csharp, java, python
       fail-on-severity: 'high'
@@ -302,7 +302,7 @@ jobs:
 ```yaml
 jobs:
   sonarqube:
-    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/sonarqube.yml@main
     with:
       project-key: 'my-project-key'
     secrets:
@@ -327,7 +327,7 @@ permissions:
 
 jobs:
   release:
-    uses: your-org/EWB-devops/.github/workflows/release.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/release.yml@main
     with:
       generate-notes: true
 ```
@@ -344,7 +344,7 @@ Starter templates for common project types are available in `templates/`:
 | .NET Web API | `templates/dotnet-api/` | QA |
 | .NET Microservice | `templates/microservice/` | QA + Docker Build + Security Scan |
 
-Each template includes a ready-to-use `.github/workflows/qa.yml` — replace `your-org` with your organisation name and you are ready to run.
+Each template includes a ready-to-use `.github/workflows/qa.yml` — replace `EWBHoldings` with your organisation name and you are ready to run.
 
 ---
 

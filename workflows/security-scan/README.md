@@ -57,7 +57,7 @@ on:
 
 jobs:
   security:
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
     with:
       language: 'javascript'
       fail-on-severity: 'high'
@@ -68,7 +68,7 @@ For a .NET project:
 ```yaml
 jobs:
   security:
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
     with:
       language: 'csharp'
 ```
@@ -78,7 +78,7 @@ For multiple languages in a full-stack project:
 ```yaml
 jobs:
   security:
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
     with:
       language: 'javascript,csharp'
 ```

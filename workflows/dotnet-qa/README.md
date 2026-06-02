@@ -68,7 +68,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: '8.0.x'
 ```
@@ -78,7 +78,7 @@ Targeting a specific solution file:
 ```yaml
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: '8.0.x'
       solution-file: 'src/MyApp.sln'

@@ -106,10 +106,10 @@ To require review from specific individuals or teams based on file paths, add a 
 # .github/CODEOWNERS
 
 # All files — require review from the development team
-*  @your-org/dev-team
+*  @EWBHoldings/dev-team
 
 # Infrastructure and pipeline files — require DevOps review
-.github/  @your-org/devops-team
+.github/  @EWBHoldings/devops-team
 ```
 
 Enable **Require review from code owners** in the branch protection rule for this to take effect.

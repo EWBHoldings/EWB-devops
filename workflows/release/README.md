@@ -64,7 +64,7 @@ permissions:
 
 jobs:
   release:
-    uses: your-org/EWB-devops/.github/workflows/release.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/release.yml@main
     with:
       generate-notes: true
 ```
@@ -74,7 +74,7 @@ jobs:
 ```yaml
 jobs:
   release:
-    uses: your-org/EWB-devops/.github/workflows/release.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/release.yml@main
     with:
       tag-name: 'v2.0.0-rc.1'
       prerelease: true
@@ -86,7 +86,7 @@ jobs:
 ```yaml
 jobs:
   release:
-    uses: your-org/EWB-devops/.github/workflows/release.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/release.yml@main
     with:
       draft: true
       generate-notes: true

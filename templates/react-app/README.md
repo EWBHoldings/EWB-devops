@@ -7,7 +7,7 @@ This template provides the recommended starting structure for a React applicatio
 ## Using This Template
 
 1. Copy the contents of this directory into your new repository
-2. Replace `your-org` in `.github/workflows/qa.yml` with your GitHub organisation name
+2. Replace `EWBHoldings` in `.github/workflows/qa.yml` with your GitHub organisation name
 3. Update `README.md` with project-specific information
 4. Install dependencies and verify the project runs locally
 5. Push to GitHub and confirm the QA pipeline executes on the first pull request

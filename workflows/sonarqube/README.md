@@ -72,7 +72,7 @@ on:
 
 jobs:
   sonarqube:
-    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/sonarqube.yml@main
     with:
       project-key: 'my-project-key'
       project-name: 'My Project'

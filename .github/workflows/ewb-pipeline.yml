@@ -1,4 +1,4 @@
-name: EWB Pipeline
+﻿name: EWB Pipeline
 
 # Centralized orchestrator workflow.
 # Consumers call this single workflow and toggle features via boolean inputs.
@@ -158,7 +158,7 @@ jobs:
   react-qa:
     name: React QA
     if: inputs.stack == 'react'
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
     with:
       node-version: ${{ inputs.node-version }}
       working-directory: ${{ inputs.working-directory }}
@@ -166,7 +166,7 @@ jobs:
   node-qa:
     name: Node.js QA
     if: inputs.stack == 'node'
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       node-version: ${{ inputs.node-version }}
       working-directory: ${{ inputs.working-directory }}
@@ -174,7 +174,7 @@ jobs:
   dotnet-qa:
     name: .NET QA
     if: inputs.stack == 'dotnet'
-    uses: your-org/EWB-devops/.github/workflows/dotnet-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/dotnet-qa.yml@main
     with:
       dotnet-version: ${{ inputs.dotnet-version }}
       working-directory: ${{ inputs.working-directory }}
@@ -183,7 +183,7 @@ jobs:
   java-qa:
     name: Java QA
     if: inputs.stack == 'java'
-    uses: your-org/EWB-devops/.github/workflows/java-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/java-qa.yml@main
     with:
       java-version: ${{ inputs.java-version }}
       java-distribution: ${{ inputs.java-distribution }}
@@ -195,7 +195,7 @@ jobs:
   security-scan:
     name: Security Scan
     if: inputs.enable-security-scan == true
-    uses: your-org/EWB-devops/.github/workflows/security-scan.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/security-scan.yml@main
     permissions:
       security-events: write
       actions: read
@@ -213,7 +213,7 @@ jobs:
     name: SonarQube Analysis
     if: inputs.enable-sonarqube == true
     needs: [react-qa, node-qa, dotnet-qa, java-qa]
-    uses: your-org/EWB-devops/.github/workflows/sonarqube.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/sonarqube.yml@main
     with:
       project-key: ${{ inputs.sonar-project-key }}
       project-name: ${{ inputs.sonar-project-name }}
@@ -229,7 +229,7 @@ jobs:
     name: Docker Build
     if: inputs.enable-docker-build == true
     needs: [react-qa, node-qa, dotnet-qa, java-qa]
-    uses: your-org/EWB-devops/.github/workflows/docker-build.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/docker-build.yml@main
     with:
       image-name: ${{ inputs.docker-image-name }}
       registry: ${{ inputs.docker-registry }}
@@ -247,7 +247,7 @@ jobs:
     name: Create Release
     if: inputs.enable-release == true
     needs: [react-qa, node-qa, dotnet-qa, java-qa]
-    uses: your-org/EWB-devops/.github/workflows/release.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/release.yml@main
     permissions:
       contents: write
     with:

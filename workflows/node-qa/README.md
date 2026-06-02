@@ -67,7 +67,7 @@ on:
 
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/node-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/node-qa.yml@main
     with:
       node-version: '20'
 ```

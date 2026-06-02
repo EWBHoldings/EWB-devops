@@ -1,4 +1,4 @@
-name: Pipeline
+﻿name: Pipeline
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   pipeline:
-    uses: your-org/EWB-devops/.github/workflows/ewb-pipeline.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/ewb-pipeline.yml@main
     with:
       stack: 'dotnet'
       dotnet-version: '8.0.x'

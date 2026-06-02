@@ -59,13 +59,13 @@ Example:
 ```yaml
 jobs:
   qa:
-    uses: your-org/EWB-devops/.github/workflows/react-qa.yml@main
+    uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@main
 ```
 
 The `@main` ref means consumers always run the latest approved version of the workflow. To pin to a specific version, use a commit SHA or tag:
 
 ```yaml
-uses: your-org/EWB-devops/.github/workflows/react-qa.yml@v1.2.0
+uses: EWBHoldings/EWB-devops/.github/workflows/react-qa.yml@v1.2.0
 ```
 
 ---

@@ -7,7 +7,7 @@ This template provides the recommended starting structure for a .NET 8 microserv
 ## Using This Template
 
 1. Copy the contents of this directory into your new repository
-2. Replace `your-org` with your GitHub organisation name throughout
+2. Replace `EWBHoldings` with your GitHub organisation name throughout
 3. Replace `my-microservice` in the workflow file with your image name
 4. Rename `MyService` throughout the project to your service name
 5. Update the `Dockerfile` `ENTRYPOINT` to match your project's DLL name
