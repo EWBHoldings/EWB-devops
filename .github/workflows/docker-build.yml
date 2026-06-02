@@ -33,7 +33,7 @@ on:
         default: 'ghcr.io'
         type: string
       image-tag:
-        description: 'Tag to apply to the image (e.g. latest, 1.0.0, ${{ github.sha }})'
+        description: 'Tag to apply to the image (e.g. latest, 1.0.0, a commit SHA)'
         required: false
         default: 'latest'
         type: string
